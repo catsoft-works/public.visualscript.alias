@@ -1,0 +1,17 @@
+{
+    "name": "VisualScript.Runtime.Alias",
+    "rootNamespace": "VisualScript.Runtime.Alias",
+    "references": [
+        "GUID:1c5e1808a1a3e413580dc3170b1d712d",
+        "GUID:d8b63aba1907145bea998dd612889d6b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

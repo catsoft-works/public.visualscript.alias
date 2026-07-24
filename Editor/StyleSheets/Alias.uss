@@ -1,0 +1,18 @@
+#VS-Alias {
+    margin-top: 3px;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow: hidden;
+}
+
+.vs-alias-field-mode {
+    height: 18px;
+    margin-right: 0;
+}
+
+.vs-alias-field-id {
+    flex-grow: 1;
+    flex-shrink: 0;
+    height: 18px;
+    margin-right: 3px;
+}
