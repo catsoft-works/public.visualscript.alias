@@ -7,8 +7,7 @@ namespace VisualScript.Runtime.Alias
     [AddComponentMenu("")]
     public class AliasManager : Singleton<AliasManager>
     {
-        private const string ERR_DUPLICATE_ID = "Alias with duplicate ID = {0}";
-        private const string ERR_CHANGE_ID = "Alias change with duplicate ID from {0} to {1}";
+        private const string ERR_DUPLICATE_ID = "Duplicate Alias ID = {0}. '{1}' not set because '{2}' uses it";
 
         // MEMBERS: -------------------------------------------------------------------------------
 
@@ -29,15 +28,31 @@ namespace VisualScript.Runtime.Alias
             if (AppManager.IsExiting) return;
             if (alias == null) return;
 
-            IdString id = alias.Id;
-            GameObject instance = alias.gameObject;
+            AliasManager instance = Instance;
+            if (instance == null) return;
 
-            if (!Instance.m_Aliases.TryAdd(id, instance))
+            IdString id = alias.Id;
+            GameObject gameObject = alias.gameObject;
+
+            if (instance.m_Aliases.TryGetValue(id, out GameObject registered))
             {
-                Debug.LogErrorFormat(ERR_DUPLICATE_ID, id);
+                if (registered == gameObject) return;
+
+                if (registered != null)
+                {
+                    Debug.LogErrorFormat(
+                        gameObject,
+                        ERR_DUPLICATE_ID,
+                        id,
+                        gameObject.name,
+                        registered.name
+                    );
+
+                    return;
+                }
             }
 
-            alias.EventChange += OnChangeID;
+            instance.m_Aliases[id] = gameObject;
         }
 
         internal static void Unregister(Alias alias)
@@ -45,33 +60,48 @@ namespace VisualScript.Runtime.Alias
             if (AppManager.IsExiting) return;
             if (alias == null) return;
 
-            alias.EventChange -= OnChangeID;
-            Instance.m_Aliases.Remove(alias.Id);
+            Remove(alias.Id, alias.gameObject);
+        }
+
+        internal static void ChangeId(Alias alias, IdString previousId)
+        {
+            if (AppManager.IsExiting) return;
+            if (alias == null) return;
+
+            Remove(previousId, alias.gameObject);
+            Register(alias);
         }
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
 
         public static bool Has(IdString id)
         {
-            return Instance.m_Aliases.ContainsKey(id);
+            return Get(id) != null;
         }
 
         public static GameObject Get(IdString id)
         {
-            return Instance.m_Aliases.GetValueOrDefault(id);
+            AliasManager instance = Instance;
+            if (instance == null) return null;
+
+            if (!instance.m_Aliases.TryGetValue(id, out GameObject alias)) return null;
+            if (alias != null) return alias;
+
+            instance.m_Aliases.Remove(id);
+            return null;
         }
 
         // PRIVATE METHODS: -----------------------------------------------------------------------
 
-        private static void OnChangeID(IdString previousID, IdString newID)
+        private static void Remove(IdString id, GameObject gameObject)
         {
-            GameObject instance = Get(previousID);
-            Instance.m_Aliases.Remove(previousID);
+            AliasManager instance = Instance;
+            if (instance == null) return;
 
-            if (!Instance.m_Aliases.TryAdd(newID, instance))
-            {
-                Debug.LogErrorFormat(ERR_CHANGE_ID, previousID, newID);
-            }
+            if (!instance.m_Aliases.TryGetValue(id, out GameObject registered)) return;
+            if (registered != null && registered != gameObject) return;
+
+            instance.m_Aliases.Remove(id);
         }
     }
 }

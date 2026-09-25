@@ -32,6 +32,8 @@ namespace VisualScript.Runtime.Alias
                 IdString previousId = this.m_Id;
 
                 this.m_Id = value;
+
+                AliasManager.ChangeId(this, previousId);
                 this.EventChange?.Invoke(previousId, this.m_Id);
             }
         }
