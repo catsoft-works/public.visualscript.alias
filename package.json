@@ -1,11 +1,11 @@
 {
   "name": "works.catsoft.visualscript-alias",
-  "version": "1.0.3",
+  "version": "1.1.4",
   "displayName": "Visual Script - Alias",
-  "description": "Official support for Alias",
-  "documentationUrl": "https://docs.visualscript.dev",
-  "changelogUrl": "https://visualscript.dev/changelog",
-  "licensesUrl": "https://visualscript.dev/license",
+  "description": "Gives game objects an ID so any Event can find them, even across scenes",
+  "documentationUrl": "https://docs.visualscript.dev/alias",
+  "changelogUrl": "https://docs.visualscript.dev/manual/releases",
+  "licensesUrl": "https://visualscript.dev/terms-of-service",
   "dependencies": {
     "com.unity.ugui": "2.0.0",
     "com.unity.modules.ui": "1.0.0",
